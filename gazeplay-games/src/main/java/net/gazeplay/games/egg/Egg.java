@@ -1,5 +1,7 @@
 package net.gazeplay.games.egg;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
@@ -25,7 +27,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class Egg extends Parent {
 
     private final double fixationlength;
-
+    Timer timer;
     private final StackPane cards;
 
     private final IGameContext gameContext;
@@ -44,7 +46,7 @@ public class Egg extends Parent {
 
     public Egg(final IGameContext gameContext, final Stats stats,
                final EggGame gameInstance, final int fixationlength, final int numberOfTurn) {
-
+        timer = new Timer();
         this.totalNumberOfTurns = numberOfTurn;
 
         final Scene scene = gameContext.getPrimaryScene();
@@ -132,7 +134,7 @@ public class Egg extends Parent {
 
     private EventHandler<Event> buildEvent() {
         final Egg that = this;
-
+        timer.schedule(new RemindTask(),6000);
         return e -> {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
@@ -157,7 +159,7 @@ public class Egg extends Parent {
                             playSound(1);
 
                         } else if (turnNumber == totalNumberOfTurns - 1) {
-
+                            timer.cancel();
                             turnNumber++;
                             gameContext.getGazeDeviceManager().removeEventFilter(cards);
                             that.removeEventFilter(MouseEvent.ANY, enterEvent);
@@ -169,7 +171,7 @@ public class Egg extends Parent {
                             stats.incrementNumberOfGoalsReached();
                             playSound(2);
 
-                            final PauseTransition t = new PauseTransition(Duration.seconds(2));
+                            final PauseTransition t = new PauseTransition(Duration.seconds(1));
 
                             t.setOnFinished(actionEvent1 -> {
 
@@ -198,8 +200,41 @@ public class Egg extends Parent {
                 timelineProgressBar.stop();
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);
+
             }
         };
+    }
+
+    class RemindTask extends TimerTask{
+        //final Egg that = this;
+        public void run(){
+            //turnNumber++;
+            timer.cancel();
+            gameContext.getGazeDeviceManager().removeEventFilter(cards);
+            //that.removeEventFilter(MouseEvent.ANY, enterEvent);
+            //that.removeEventFilter(GazeEvent.ANY, enterEvent);
+            cards.getChildren().get(1).setOpacity(0);
+            progressIndicator.setOpacity(0);
+            stats.incrementNumberOfGoalsReached();
+            playSound(2);
+            final PauseTransition t1 = new PauseTransition(Duration.seconds(1));
+            t1.setOnFinished(actionEvent1 -> {
+
+                gameContext.updateScore(stats, gameInstance);
+
+                gameContext.playWinTransition(0, event -> {
+                    gameInstance.dispose();
+
+                    gameContext.clear();
+
+                    gameContext.showRoundStats(stats, gameInstance);
+
+                });
+
+            });
+
+            t1.play();
+        }
     }
 
     public void playSound(final int i) {

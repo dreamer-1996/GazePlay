@@ -1,9 +1,8 @@
 package net.gazeplay.games.creampie;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -18,22 +17,25 @@ import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.components.Portrait;
 import net.gazeplay.components.Position;
 import net.gazeplay.components.RandomPositionGenerator;
+import net.gazeplay.games.egg.Egg;
 
 import java.util.ArrayList;
+import java.util.Timer;
 
 /**
  * Created by schwab on 26/12/2016.
  */
 @Slf4j
 public class Target extends Portrait {
+    //public Timer timer;
 
     private final Hand hand;
 
     final EventHandler<Event> enterEvent;
 
-    private final CreamPie gameInstance;
+    public final CreamPie gameInstance;
 
-    private boolean animationEnded = true;
+    public boolean animationEnded = true;
 
     private final int radius;
 
@@ -47,12 +49,16 @@ public class Target extends Portrait {
 
     private static final String SOUNDS_MISSILE = "data/creampie/sounds/missile.mp3";
 
-    private final IGameContext gameContext;
+    public final IGameContext gameContext;
+
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
                   final ImageLibrary imageLibrary, CreamPie gameInstance, final int radius) {
+        //Timer start and declare
+
 
         super(radius, randomPositionGenerator, imageLibrary);
+
         this.radius = radius;
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
@@ -64,10 +70,13 @@ public class Target extends Portrait {
         gameContext.startTimeLimiter();
         this.targetAOIList = new ArrayList<>();
 
+
         enterEvent = e -> {
+
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
                 && animationEnded) {
-
+                //timer cancel
+                CreamPie.timer.cancel();
                 animationEnded = false;
                 enter();
             }
@@ -83,7 +92,12 @@ public class Target extends Portrait {
 
     }
 
-    private void enter() {
+    public void enter() {
+        //timer.cancel();
+       // timer.cancle();
+      // new CreamPie().timer.cancel();
+       // CreamPie.timer1.cancel();
+        //timer.cancel();
 
         stats.incrementNumberOfGoalsReached();
         gameContext.updateScore(stats,gameInstance);
@@ -95,6 +109,23 @@ public class Target extends Portrait {
         hand.onTargetHit(this);
 
         gameContext.getSoundManager().add(SOUNDS_MISSILE);
+        final PauseTransition t = new PauseTransition(Duration.seconds(1));
+
+        t.setOnFinished(actionEvent1 -> {
+
+            //gameContext.updateScore(stats, gameInstance);
+
+                gameContext.playWinTransition(0, event -> {
+                gameInstance.dispose();
+
+                gameContext.clear();
+
+                gameContext.showRoundStats(stats, gameInstance);
+
+            });
+
+        });
+        t.play();        //timer.schedule(new RemindTask(),6000);
 
     }
 
@@ -140,4 +171,20 @@ public class Target extends Portrait {
         targetAOIList.add(targetAOI);
 
     }
+
+    /*public class RemindTask extends TimerTask{
+        public void run() {
+
+            animationEnded = false;
+            enter();
+            gameContext.start();
+
+            //gameContext.getGazeDeviceManager().addEventFilter(this);
+
+            //this.addEventFilter(MouseEvent.ANY, enterEvent);
+
+            //this.addEventFilter(GazeEvent.ANY, enterEvent);
+        }
+    }*/
 }
+

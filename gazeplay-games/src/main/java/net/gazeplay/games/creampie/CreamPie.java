@@ -9,6 +9,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
 import net.gazeplay.components.RandomPositionGenerator;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by schwab on 12/08/2016.
  */
@@ -23,6 +26,11 @@ public class CreamPie implements GameLifeCycle {
     private final Target target;
 
     private final ReplayablePseudoRandom randomGenerator;
+
+
+    public static Timer timer;
+
+
 
     public CreamPie(IGameContext gameContext, Stats stats) {
         super();
@@ -40,7 +48,7 @@ public class CreamPie implements GameLifeCycle {
         Scene scene = gameContext.getPrimaryScene();
         int radius = (int) Math.min(scene.getHeight()/12, scene.getWidth()/12);
 
-        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this, radius );
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this, radius);
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
     }
@@ -66,8 +74,9 @@ public class CreamPie implements GameLifeCycle {
 
     @Override
     public void launch() {
+        timer = new Timer();
+        timer.schedule(new RemindTask(),5000);
         gameContext.getChildren().clear();
-
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
         gameContext.setLimiterAvailable();
@@ -85,4 +94,18 @@ public class CreamPie implements GameLifeCycle {
     public void dispose() {
         stats.setTargetAOIList(target.getTargetAOIList());
     }
+
+
+      public class RemindTask extends TimerTask {
+        public void run() {
+            timer.cancel();
+            target.animationEnded = false;
+            target.enter();
+            target.gameContext.start();
+            //gameContext.getGazeDeviceManager().addEventFilter(this);
+            //this.addEventFilter(MouseEvent.ANY, enterEvent);
+            //this.addEventFilter(GazeEvent.ANY, enterEvent);
+        }
+    }
+
 }

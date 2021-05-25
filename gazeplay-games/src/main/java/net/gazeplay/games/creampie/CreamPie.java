@@ -79,7 +79,7 @@ public class CreamPie implements GameLifeCycle {
     @Override
     public void launch() {
         timer = new Timer();
-        timer.schedule(new RemindTask(),5000);
+        timer.schedule(new RemindTask(),6000);
         gameContext.getChildren().clear();
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);

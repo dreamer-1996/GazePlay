@@ -143,7 +143,7 @@ public class Egg extends Parent {
 
     private EventHandler<Event> buildEvent() {
         final Egg that = this;
-        timer.schedule(new RemindTask(),15000);
+        timer.schedule(new RemindTask(),8000);
         return e -> {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {

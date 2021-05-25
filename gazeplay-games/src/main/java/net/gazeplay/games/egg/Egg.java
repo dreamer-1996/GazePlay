@@ -48,53 +48,62 @@ public class Egg extends Parent {
                final EggGame gameInstance, final int fixationlength, final int numberOfTurn) {
         timer = new Timer();
         this.totalNumberOfTurns = numberOfTurn;
+        Scene scene = gameContext.getPrimaryScene();
 
-        final Scene scene = gameContext.getPrimaryScene();
-        final double height = scene.getHeight() / 2;
-        final double width = 3. * height / 4.;
+       double height = scene.getHeight() / 2;
 
-        final double positionX = scene.getWidth() / 2 - width / 2;
-        final double positionY = scene.getHeight() / 2 - height / 2;
+        double width = 3. * height / 4.;
 
-        this.cards = new StackPane();
-        this.cards.setLayoutX(positionX);
-        this.cards.setLayoutY(positionY);
-        this.cards.setPrefWidth(width);
-        this.cards.setPrefHeight(height);
+         //double width = 10 * height / 20;
+         double positionX = scene.getWidth() / 2 - width / 2;
+         double positionY = scene.getHeight() / 2 - height / 2;
+
+        log.info("positionX : {} ; positionY : {} ; Height : {} ; Width: {}",(positionX) ,(positionY),height,width);
+
+         this.cards = new StackPane();
+        this.cards.setLayoutX(positionX);//positionX
+        this.cards.setLayoutY(positionY); //positionY
+        this.cards.setPrefWidth(width); //width
+        this.cards.setPrefHeight(height); //height
 
         this.cards.prefHeightProperty().bind(scene.heightProperty().divide(2d));
         this.cards.prefWidthProperty().bind(this.cards.heightProperty().multiply(3d).divide(4d));
         this.cards.layoutXProperty().bind(scene.widthProperty().divide(2d).subtract(this.cards.widthProperty().divide(2d)));
         this.cards.layoutYProperty().bind(scene.heightProperty().divide(2d).subtract(this.cards.heightProperty().divide(2d)));
 
-        final Rectangle image1 = new Rectangle(positionX, positionY, width, height);
+        /*this.cards.prefHeightProperty().bind(scene.heightProperty().divide(4d));
+        this.cards.prefWidthProperty().bind(this.cards.heightProperty().multiply(5d).divide(8d));
+        this.cards.layoutXProperty().bind(scene.widthProperty().divide(4d).subtract(this.cards.widthProperty().divide(4d)));
+        this.cards.layoutYProperty().bind(scene.heightProperty().divide(4d).subtract(this.cards.heightProperty().divide(4d)));*/
+
+
+        Rectangle image1 = new Rectangle(positionX, positionY, width,height );
         image1.setFill(new ImagePattern(new Image("data/egg/images/egg1.jpg"), 0, 0, 1, 1, true));
         image1.setMouseTransparent(true);
-
-        final Rectangle image2 = new Rectangle(positionX, positionY, width, height);
-        image2.setFill(new ImagePattern(new Image("data/egg/images/egg2.jpg"), 0, 0, 1, 1, true));
-        image2.setMouseTransparent(true);
-
-        final Rectangle image3 = new Rectangle(positionX, positionY, width, height);
+        /*Rectangle image2 = new Rectangle(positionX, positionY, width, height);
+        image2.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
+        image2.setMouseTransparent(true);*/
+        Rectangle image3 = new Rectangle(positionX, positionY, width, height);
         image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
 
-        image1.heightProperty().bind(scene.heightProperty().divide(2d));
-        image1.widthProperty().bind(image1.heightProperty().multiply(3d).divide(4d));
-        image1.xProperty().bind(scene.widthProperty().divide(2d).subtract(image1.widthProperty().divide(2d)));
-        image1.yProperty().bind(scene.heightProperty().divide(2d).subtract(image1.heightProperty().divide(2d)));
+        image1.heightProperty().bind(scene.heightProperty().divide(4d));
+        image1.widthProperty().bind(image1.heightProperty().multiply(5d).divide(8d));
+        image1.xProperty().bind(scene.widthProperty().divide(4d).subtract(image1.widthProperty().divide(4d)));
+        image1.yProperty().bind(scene.heightProperty().divide(4d).subtract(image1.heightProperty().divide(4d)));
 
-        image2.heightProperty().bind(scene.heightProperty().divide(2d));
-        image2.widthProperty().bind(image2.heightProperty().multiply(3d).divide(4d));
-        image2.xProperty().bind(scene.widthProperty().divide(2d).subtract(image2.widthProperty().divide(2d)));
-        image2.yProperty().bind(scene.heightProperty().divide(2d).subtract(image2.heightProperty().divide(2d)));
+        /*image2.heightProperty().bind(scene.heightProperty().divide(4));
+        image2.widthProperty().bind(image2.heightProperty().multiply(5).divide(8));
+        image2.xProperty().bind(scene.widthProperty().divide(4).subtract(image2.widthProperty().divide(4)));
+        image2.yProperty().bind(scene.heightProperty().divide(4).subtract(image2.heightProperty().divide(4)));*/
 
-        image3.heightProperty().bind(scene.heightProperty().divide(2d));
-        image3.widthProperty().bind(image3.heightProperty().multiply(3d).divide(4d));
-        image3.xProperty().bind(scene.widthProperty().divide(2d).subtract(image3.widthProperty().divide(2d)));
-        image3.yProperty().bind(scene.heightProperty().divide(2d).subtract(image3.heightProperty().divide(2d)));
+        image3.heightProperty().bind(scene.heightProperty().divide(4));
+        image3.widthProperty().bind(image3.heightProperty().multiply(5).divide(8));
+        image3.xProperty().bind(scene.widthProperty().divide(4).subtract(image3.widthProperty().divide(4)));
+        image3.yProperty().bind(scene.heightProperty().divide(4).subtract(image3.heightProperty().divide(4)));
 
 
-        this.cards.getChildren().addAll(image3, image2, image1);
+        //this.cards.getChildren().addAll(image3, image2, image1);
+        this.cards.getChildren().addAll(image3, image1);
 
         this.gameContext = gameContext;
 
@@ -134,7 +143,7 @@ public class Egg extends Parent {
 
     private EventHandler<Event> buildEvent() {
         final Egg that = this;
-        timer.schedule(new RemindTask(),6000);
+        timer.schedule(new RemindTask(),15000);
         return e -> {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {

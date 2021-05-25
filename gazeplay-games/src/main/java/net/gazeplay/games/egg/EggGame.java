@@ -36,7 +36,6 @@ public class EggGame implements GameLifeCycle {
         gameContext.start();
         gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
-
         final Egg egg = createEgg(config);
 
         gameContext.getChildren().add(egg);

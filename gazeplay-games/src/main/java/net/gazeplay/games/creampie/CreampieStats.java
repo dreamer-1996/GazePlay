@@ -7,6 +7,7 @@ import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.stats.ShootGamesStats;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -21,5 +22,13 @@ public class CreampieStats extends ShootGamesStats {
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         this.gameName = "creampie";
     }
+    /*@Override
+    public SavedStatsInfo saveStats() throws IOException {
+
+        SavedStatsInfo statsInfo = super.saveStats();
+
+        //log.debug("Stats saved");
+        return statsInfo;
+    }*/
 
 }

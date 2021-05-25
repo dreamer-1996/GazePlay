@@ -547,8 +547,10 @@ public class Stats implements GazeMotionListener {
 
     private void setJSONCoordinates(long timeElapsedMillis, int getX, int getY, String event) {
         JsonObject coordinates = new JsonObject();
-        coordinates.addProperty("X", getX / gameContextScene.getWidth());
-        coordinates.addProperty("Y", getY / gameContextScene.getHeight());
+       // coordinates.addProperty("X", getX / gameContextScene.getWidth());
+        //coordinates.addProperty("Y", getY / gameContextScene.getHeight());
+        coordinates.addProperty("X", getX);
+        coordinates.addProperty("Y", getY);
         coordinates.addProperty("time", timeElapsedMillis);
         coordinates.addProperty("event", event);
         saveCoordinates(coordinates);

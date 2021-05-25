@@ -1,6 +1,7 @@
 package net.gazeplay.games.creampie;
 
 import javafx.scene.Scene;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -14,7 +15,9 @@ import java.util.TimerTask;
 
 /**
  * Created by schwab on 12/08/2016.
+ *
  */
+@Slf4j
 public class CreamPie implements GameLifeCycle {
 
     private final IGameContext gameContext;
@@ -62,10 +65,11 @@ public class CreamPie implements GameLifeCycle {
         final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
-
+        //randomPositionGenerator.
         hand = new Hand();
 
         Scene scene = gameContext.getPrimaryScene();
+
         int radius = (int) Math.min(scene.getHeight()/12, scene.getWidth()/12);
 
         target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this,radius);
@@ -97,6 +101,7 @@ public class CreamPie implements GameLifeCycle {
 
 
       public class RemindTask extends TimerTask {
+
         public void run() {
             timer.cancel();
             target.animationEnded = false;

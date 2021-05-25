@@ -77,6 +77,9 @@ public class Hand extends Parent {
             new KeyValue(pie.translateXProperty(), target.getCenterX() - maxSize)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
             new KeyValue(pie.translateYProperty(), target.getCenterY() - maxSize)));
+
+        log.info("positionX : {} ; positionY : {}",(target.getCenterX()) ,(target.getCenterY()));
+
         timeline.getKeyFrames()
             .add(new KeyFrame(new Duration(2000), new KeyValue(pie.fitHeightProperty(), maxSize * 2)));
         timeline.getKeyFrames()
